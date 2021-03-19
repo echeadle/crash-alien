@@ -21,6 +21,7 @@ def check_events(ship):
             elif event.key == pygame.K_LEFT:
                 ship.moving_left = False
 
+
 def update_screen(ai_settings, screen, ship):
     """Update images on the screen and flip to new screen"""
     # Redraw the screen during each pass through the loop.
