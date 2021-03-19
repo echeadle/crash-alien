@@ -4,7 +4,7 @@ import pygame
 class Ship:
 
     def __init__(self, screen):
-        """Initialize shipand set it's starting position"""
+        """Initialize ship and set it's starting position"""
         self.screen = screen
 
         # Load the ship image and git it's rect
@@ -15,6 +15,14 @@ class Ship:
         # Start each new ship att the bottom center of the screen
         self.rect.centerx = self.screen_rect.centerx
         self.rect.bottom = self.screen_rect.bottom
+
+        # Movement flag
+        self.moving_right = False
+
+    def update(self):
+        """Update the ship's position based on the movement flag."""
+        if self.moving_right:
+            self.rect.centerx += 1
 
     def blitme(self):
         """Draw the ship at it's current location"""
