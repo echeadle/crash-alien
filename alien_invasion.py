@@ -6,6 +6,7 @@ from ship import Ship
 import game_functions as gf
 
 
+
 def run_game():
     # Initialize game and create a screen object.
     pygame.init()
@@ -27,9 +28,9 @@ def run_game():
         # Watch for keyboard an mouse events.
         gf.check_events(ai_settings, screen, ship, bullets)
         ship.update()
-        bullets_update()
+        bullets.update()
         # print(f' x position: {ship.rect.centerx}')
-        gf.update_screen(ai_settings, screen, ship)
+        gf.update_screen(ai_settings, screen, ship, bullets)
 
 
 run_game()
