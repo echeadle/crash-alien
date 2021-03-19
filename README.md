@@ -1,1 +1,2 @@
-# Crash Course
+# Python Crash Course 
+## Nostarch Press
