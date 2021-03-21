@@ -6,7 +6,6 @@ import pygame
 from bullet import Bullet
 from alien import Alien
 
-
 def check_keydown_events(event, ai_settings, screen, ship, bullets):
     """Respond to keypresses"""
     if event.key == pygame.K_RIGHT:
@@ -29,7 +28,6 @@ def check_keyup_events(event, ship):
         ship.moving_right = False
     elif event.key == pygame.K_LEFT:
         ship.moving_left = False
-
 
 def check_events(ai_settings, screen, ship, bullets):
     """Respond to keyboard an mouse events."""
@@ -134,10 +132,14 @@ def check_fleet_edges(ai_settings, aliens):
             break
 
 
-def update_aliens(ai_settings, aliens):
+def update_aliens(ai_settings, ship, aliens):
     """
     Check if the fleet is at an edge,
     and then update the position of all aliens in the fleet
     """
     check_fleet_edges(ai_settings, aliens)
     aliens.update()
+
+    # Look for alien-ship collisions.
+    if pygame.sprite.spritecollideany(ship, aliens):
+        print("Ship hit!!!!")
