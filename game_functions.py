@@ -6,11 +6,9 @@ import pygame
 from bullet import Bullet
 from alien import Alien
 
-
 def check_keydown_events(event, ai_settings, screen, ship, bullets):
-    """Respond to keypresses"""
+    """Respond to keypresses."""
     if event.key == pygame.K_RIGHT:
-        # Move ship to the right.
         ship.moving_right = True
     elif event.key == pygame.K_LEFT:
         ship.moving_left = True
@@ -22,17 +20,15 @@ def check_keydown_events(event, ai_settings, screen, ship, bullets):
     elif event.key == pygame.K_q:
         sys.exit()
 
-
 def check_keyup_events(event, ship):
-    """Respond to keypresses"""
+    """Respond to key releases."""
     if event.key == pygame.K_RIGHT:
         ship.moving_right = False
     elif event.key == pygame.K_LEFT:
         ship.moving_left = False
 
-
 def check_events(ai_settings, screen, ship, bullets):
-    """Respond to keyboard an mouse events."""
+    """Respond to keypresses and mouse events."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -43,16 +39,14 @@ def check_events(ai_settings, screen, ship, bullets):
 
 
 def update_screen(ai_settings, screen, ship, aliens, bullets):
-    """Update images on the screen and flip to new screen"""
-    # Redraw the screen during each pass through the loop.
+    """Update images on the screen, and flip to the new screen."""
+    # Redraw the screen, each pass through the loop.
     screen.fill(ai_settings.bg_color)
 
-    # aliens.draw(screen)
-    # Redraw all bullets behind ship and aliens.
+    # Redraw all bullets, behind ship and aliens.
     for bullet in bullets.sprites():
         bullet.draw_bullet()
     ship.blitme()
-    # alien.blitme()
     aliens.draw(screen)
     # Make the most recently drawn screen visible
     pygame.display.flip()
@@ -112,7 +106,7 @@ def create_fleet(ai_settings, screen, ship, aliens):
     alien = Alien(ai_settings, screen)
     number_aliens_x = get_number_aliens_x(ai_settings, alien.rect.width)
     number_rows = get_number_rows(ai_settings, ship.rect.height, alien.rect.height)
-    print(f"Num Aliens {number_aliens_x}, Num rows {number_rows}")
+
     # Create the fleet of aliens
     for row_number in range(number_rows):
         for alien_number in range(number_aliens_x):
@@ -126,21 +120,26 @@ def change_fleet_direction(ai_settings, aliens):
         alien.rect.y += ai_settings.fleet_drop_speed
     ai_settings.fleet_direction *= -1
 
+
 def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
     """Respond to ship being hit by alien."""
-    # Decrement ships_left.
-    stats.ships_left -= 1
+    if stats.ships_left > 0:
+        # Decrement ships_left.
+        stats.ships_left -= 1
 
-    # Empty the list of aliens and bullets.
-    aliens.empty()
-    bullets.empty()
+        # Empty the list of aliens and bullets.
+        aliens.empty()
+        bullets.empty()
 
-    # Create a new fleet and center the ship.
-    create_fleet(ai_settings, screen, ship, aliens)
-    ship.center_ship()
+        # Create a new fleet and center the ship.
+        create_fleet(ai_settings, screen, ship, aliens)
+        ship.center_ship()
 
-    # Pause.
-    sleep(0.5)
+        # Pause.
+        sleep(0.5)
+    else:
+        stats.game_active = False
+
 
 def check_fleet_edges(ai_settings, aliens):
     """Respond appropriately if any aliens have reached the edge"""
@@ -174,4 +173,3 @@ def update_aliens(ai_settings, stats, screen, ship, aliens, bullets):
 
     # Look for aliens hitting the bottom of the screen
     check_aliens_bottom(ai_settings, stats, screen, ship, aliens, bullets)
-
