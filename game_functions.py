@@ -29,8 +29,8 @@ def check_keyup_events(event, ship):
     elif event.key == pygame.K_LEFT:
         ship.moving_left = False
 
-
-def check_events(ai_settings, screen, stats, play_button, ship, aliens, bullets):
+def check_events(ai_settings, screen, stats, play_button, ship, aliens,
+        bullets):
     """Respond to keypresses and mouse events."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -41,17 +41,22 @@ def check_events(ai_settings, screen, stats, play_button, ship, aliens, bullets)
             check_keyup_events(event, ship)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            check_play_button(ai_settings, screen, stats, play_button, ship, aliens, bullets, mouse_x, mouse_y)
+            check_play_button(ai_settings, screen, stats, play_button,
+                ship, aliens, bullets, mouse_x, mouse_y)
 
-
-def check_play_button(ai_settings, screen, stats, play_button, ship, aliens, bullets, mouse_x, mouse_y):
-    """Start a new game when the player clicks play"""
+def check_play_button(ai_settings, screen, stats, play_button, ship,
+        aliens, bullets, mouse_x, mouse_y):
+    """Start a new game when the player clicks Play."""
     button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
     if button_clicked and not stats.game_active:
-        # Hide Mouse cursor.
+        # Reset the game settings.
+        ai_settings.initialize_dynamic_settings()
+
+        # Hide the mouse cursor.
         pygame.mouse.set_visible(False)
 
-        # Reset game statistics.
+        # Reset the game statistics.
+        stats.reset_stats()
         stats.game_active = True
 
         # Empty the list of aliens and bullets.
@@ -96,7 +101,9 @@ def update_bullets(ai_settings, screen, ship, aliens, bullets):
 def check_bullet_alien_collisions(ai_settings, screen, ship, aliens, bullets):
     """Respond to bullet-alien collisions"""
     # Remove any bullets and aliens that have collided.
-    collisions = pygame.sprite.groupcollide(bullets, aliens, False, True)
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+
+
     if len(aliens) == 0:
         # Destroy existing bullets and create new fleet.
         bullets.empty()
